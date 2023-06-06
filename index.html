@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diet Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0/css/bootstrap.min.css">
+	<style>
+	h4{
+	color:#934707;
+	}
+	span{
+	color:black}
+	</style>
+</head>
+<body>
+    <div class="container py-4">
+        <h1>Diet Calculator</h1>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="weight">Weight (kg):</label>
+                    <input type="number" id="weight" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="height">Height (cm):</label>
+                    <input type="number" id="height" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="sexe-select">Sex:</label>
+                    <select id="sexe-select" class="form-control">
+                        <option value="men">Men</option>
+                        <option value="women">Women</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="action-select">Activity Level:</label>
+                    <select id="action-select" class="form-control">
+                        <option value="No sport little movement">No sport little movement</option>
+                        <option value="sport 1 to 3 day in week">Sport 1 to 3 days per week</option>
+                        <option value="sport 3 to 5 day in week">Sport 3 to 5 days per week</option>
+                        <option value="sport 6 time in week">Sport 6 times per week</option>
+                        <option value="sport every day end hard work">Sport every day with hard work</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="target-select">Target:</label>
+                    <select id="target-select" class="form-control">
+                        <option value="save weight">Maintain weight</option>
+                        <option value="lost weight">Lose weight</option>
+                        <option value="over weight">Gain weight</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="level-select">Level:</label>
+                    <select id="level-select" class="form-control">
+                        <option value="level1">Level 1</option>
+                        <option value="level2">Level 2</option>
+                        <option value="level3">Level 3</option>
+                    </select>
+                </div>
+                
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h4>BMR: <span id="BMR"></span></h4>
+                <h4>TDEE: <span id="TDEE"></span></h4>
+                <h4>Calories per day: <span id="calories"></span></h4>
+                <h4>Protein (cal): <span id="protein_c"></span> / Protein (g): <span id="protein_g"></span></h4>
+                <h4>Carbs (cal): <span id="carb_c"></span> / Carbs (g): <span id="carb_g"></span></h4>
+                <h4>Fat (cal): <span id="fat_c"></span> / Fat (g): <span id="fat_g"></span></h4>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <label for="repast-select">Number of Meals:</label>
+                <select id="repast-select" class="form-control">
+                    <option value="4">4 Meals</option>
+                    <option value="5">5 Meals</option>
+                    <option value="6">6 Meals</option>
+                </select>
+				<button id="calculate-btn" class="btn btn-primary">Calculate</button>
+                <div id="meal-details" class="mt-4">
+                    <!-- Meal details will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            var ageInMilliseconds = new Date() - new Date(document.getElementById("date").value);
+            var age = Math.floor(ageInMilliseconds / 1000 / 60 / 60 / 24 / 365);
+            var height = document.getElementById("height").value;
+            var weight = document.getElementById("weight").value;
+            var sexe = document.getElementById("sexe-select").value;
+            var action = document.getElementById("action-select").value;
+
+            var bmr = (height * 6.25 + weight * 10) - age * 5;
+            if (sexe == "men")
+                bmr += 5;
+            else
+                bmr -= 161;
+
+            document.getElementById("BMR").textContent = bmr;
+
+            var TDEE;
+            if (action == "No sport little movement")
+                TDEE = bmr * 1.2;
+            else if (action == "sport 1 to 3 day in week")
+                TDEE = bmr * 1.35;
+            else if (action == "sport 3 to 5 day in week")
+                TDEE = bmr * 1.5;
+            else if (action == "sport 6 time in week")
+                TDEE = bmr * 1.9;
+
+            document.getElementById("TDEE").textContent = TDEE;
+
+            var target = document.getElementById("target-select").value;
+            var level = document.getElementById("level-select").value;
+            var calories;
+
+            if (target == "save weight")
+                calories = TDEE;
+            else if (target == "lost weight" && level == "level1")
+                calories = TDEE - 300;
+            else if (target == "lost weight" && level == "level2")
+                calories = TDEE - 500;
+            else if (target == "lost weight" && level == "level3")
+                calories = TDEE - 800;
+            else if (target == "over weight" && level == "level1")
+                calories = TDEE + 300;
+            else if (target == "over weight" && level == "level2")
+                calories = TDEE + 500;
+            else if (target == "over weight" && level == "level3")
+                calories = TDEE + 800;
+ 
+           document.getElementById("calories").textContent = calories.toFixed(0);
+
+         
+
+            
+
+            // Update the values for calories, protein, carbs, and fat in each meal
+
+var caloriecalc = calories;
+var protein_g, fat_g, carb_g;
+var protein_c, fat_c, carb_c;
+
+if (target == "save weight") {
+    protein_g = weight * 2;
+    protein_c = protein_g * 4;
+    caloriecalc -= protein_c;
+
+    fat_g = weight * 0.5;
+    fat_c = fat_g * 9;
+    caloriecalc -= fat_c;
+
+    carb_c = caloriecalc;
+    carb_g = carb_c / 4;
+} else if (target == "lost weight") {
+    protein_g = weight * 2.5;
+    protein_c = protein_g * 4;
+    caloriecalc -= protein_c;
+
+    fat_g = weight * 0.5;
+    fat_c = fat_g * 9;
+    caloriecalc -= fat_c;
+
+    carb_c = caloriecalc;
+    carb_g = carb_c / 4;
+} else if (target == "over weight") {
+    protein_g = weight * 1.6;
+    protein_c = protein_g * 4;
+    caloriecalc -= protein_c;
+
+    fat_g = weight * 0.5;
+    fat_c = fat_g * 9;
+    caloriecalc -= fat_c;
+
+    carb_c = caloriecalc;
+    carb_g = carb_c / 4;
+}
+
+
+ 
+
+            document.getElementById("protein_c").textContent = protein_c.toFixed(0);
+            document.getElementById("protein_g").textContent = protein_g.toFixed(0);
+
+            document.getElementById("carb_c").textContent = carb_c.toFixed(0);
+            document.getElementById("carb_g").textContent = carb_g.toFixed(0);
+
+            document.getElementById("fat_c").textContent = fat_c.toFixed(0);
+            document.getElementById("fat_g").textContent = fat_g.toFixed(0);
+       
+        var repast = document.getElementById("repast-select").value;
+            var mealDetails = "";
+
+          if (repast == "4") {
+		  
+		         repastprotein =(protein_g/4).toFixed(2)
+				     repastCarbs =(carb_g/4).toFixed(2)
+					     repastFat =(fat_g/3).toFixed(2)
+		  
+		  
+		  
+		  
+                mealDetails += "<h4>Breakfast:</h4>";
+                mealDetails += "<h5>Fat: "+repastFat+" / Carbs: "+repastCarbs+" / Protein: "+repastprotein+"</h5>";
+				
+                mealDetails += "<h4>Lunch:</h4>";
+                mealDetails += "<h5>Fat: "+repastFat+" / Carbs: "+repastCarbs+" / Protein: "+repastprotein+"</h5>";
+				
+				mealDetails += "<h4>Before Sport/Gym: (2h , 1,5h)</h4>";
+				
+                mealDetails += "<h5>Carbs: "+repastCarbs+" / Protein: "+repastprotein+" </h5>";
+				
+                mealDetails += "<h4>Dinner:</h4>";
+                mealDetails += "<h5>Fat: "+repastFat+" / Carbs: "+repastCarbs+"  / Protein: "+repastprotein+"</h5>";
+				
+                
+            }
+            else if (repast == "5") {
+			
+			repastprotein =(protein_g/5).toFixed(2)
+			
+				     repastCarbs1 =(carb_g/2).toFixed(2)
+					 
+					 repastCarbs2 =(repastCarbs1/3).toFixed(2)
+					 
+					 
+					 
+					 
+					     repastFat =(fat_g/3).toFixed(2)
+						 
+						 
+						 
+						 
+						 
+						 
+			
+                mealDetails += "<h4>Breakfast:</h4>";
+                mealDetails += "<h5>Fat: "+repastFat+" / Carbs: "+repastCarbs2+" / Protein: "+repastprotein+"</h5>";
+				
+                mealDetails += "<h4>Lunch:</h4>";
+                mealDetails += "<h5>Fat: "+repastFat+" / Carbs: "+repastCarbs2+" / Protein: "+repastprotein+"</h5>";
+				
+            
+				
+                mealDetails += "<h4>Before Sport/Gym: (2h , 1,5h) </h4>";
+                mealDetails += "<h5>Carbs: "+repastCarbs1/2+" / Protein: "+repastprotein+"</h5>";
+                mealDetails += "<h4>After Sport/Gym: </h4>";
+                mealDetails += "<h5>Carbs: "+repastCarbs1/2+" / Protein: "+repastprotein+"</h5>";
+				
+				
+				 mealDetails += "<h4>Dinner:</h4>";
+                mealDetails += "<h5>Fat: "+repastFat+" / Carbs: "+repastCarbs2+" / Protein: "+repastprotein+"</h5>";
+				
+				
+				
+            }
+            else if (repast == "6") {
+			
+			
+			         repastprotein =(protein_g/5).toFixed(2)
+			
+				     repastCarbs1 =(carb_g/2).toFixed(2)
+					 
+					 repastCarbs2 =(repastCarbs1/4).toFixed(2)
+					  
+					 repastFat =(fat_g/4).toFixed(2)
+			
+			
+			
+			
+			
+			
+			
+			
+			
+                mealDetails += "<h4>Breakfast:</h4>";
+                mealDetails += "<h5>Fat: "+repastFat+" / Carbs: "+repastCarbs2+" / Protein: "+repastprotein+"</h5>";
+				
+                mealDetails += "<h4>Lunch:</h4>";
+                mealDetails += "<h5>Fat: "+repastFat+" / Carbs: "+repastCarbs2+" / Protein: "+repastprotein+"</h5>";
+               
+                mealDetails += "<h4>Before Sport/Gym: (2h , 1,5h)</h4>";
+                mealDetails += "<h5>Carbs: "+repastCarbs1+" / Protein: "+repastprotein+"</h5>";
+				
+                mealDetails += "<h4>After Sport/Gym:</h4>";
+                mealDetails += "<h5>Carbs: "+repastCarbs1+" / Protein: "+repastprotein+"</h5>";
+				
+				
+                mealDetails += "<h4>Repast 6:</h4>";
+                mealDetails += "<h5>Fat: "+repastFat+" / Carbs: "+repastCarbs2+" / Protein: "+repastprotein+"</h5";
+				
+				mealDetails += "<h4>Dinner:</h4>";
+                mealDetails += "<h5>Fat: "+repastFat+" / Carbs: "+repastCarbs2+" / Protein: "+repastprotein+"</h5>";
+				
+            }
+
+            document.getElementById("meal-details").innerHTML = mealDetails;
+
+
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        document.getElementById("calculate-btn").addEventListener("click", calculate);
+    </script>
+</body>
+</html>
