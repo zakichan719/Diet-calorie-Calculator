@@ -15,7 +15,7 @@ Zaki Diet Calorie Calculator is a simple web application designed to calculate d
   - Recommends a meal plan based on the selected number of meals per day.
 
 ## Usage
-https://zakichan719.github.io/Diet_calorie_Calculator/
+.https://zakichan719.github.io/Diet_calorie_Calculator/.
 . Fill in the required information in the form.
 . Click the "Calculate" button to get the results and suggested meal plan.
 
