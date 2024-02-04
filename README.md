@@ -1,5 +1,5 @@
 # Zaki Diet Calorie Calculator
-
+https://zakichan719.github.io/Diet_calorie_Calculator/
 ## Overview
 
 Zaki Diet Calorie Calculator is a simple web application designed to calculate daily calorie needs based on user input such as age, weight, height, sex, activity level, and fitness goals. It provides a breakdown of macronutrients (protein, carbs, and fat) and suggests meal plans based on the number of meals per day selected.
@@ -15,7 +15,7 @@ Zaki Diet Calorie Calculator is a simple web application designed to calculate d
   - Recommends a meal plan based on the selected number of meals per day.
 
 ## Usage
-
+https://zakichan719.github.io/Diet_calorie_Calculator/
 . Fill in the required information in the form.
 . Click the "Calculate" button to get the results and suggested meal plan.
 
